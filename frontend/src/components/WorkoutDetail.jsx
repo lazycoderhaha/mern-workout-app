@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
-import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
+import { useUpdateWorkout } from '../hooks/useUpdateWorkout';
+import { useState } from 'react';
+
 
 const WorkoutDetail = () => {
 
@@ -12,6 +14,8 @@ const WorkoutDetail = () => {
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
     const navigate = useNavigate();
+
+    const { updateWorkoutRequest } = useUpdateWorkout();
 
     useEffect(() => {
         const fetchWorkout = async () => {
@@ -27,44 +31,13 @@ const WorkoutDetail = () => {
         fetchWorkout()
     }, [id]);
 
-
     const updateWorkoutForm = async (e) => {
         e.preventDefault();
         const workout = { title, load, reps };
+        await updateWorkoutRequest(id, workout, setError, setEmptyFields);
+        navigate('/');
 
-        try {
-            const response = await fetch('http://localhost:3000/api/workouts/' + id, {
-                method: 'PATCH',
-                body: JSON.stringify(workout),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-
-            })
-            const json = await response.json()
-            if (!response.ok) {
-                setEmptyFields(json.emptyFields || []);
-                setError(json.error);
-            }
-            if (response.ok) {
-                console.log('Workout Updated:', json);
-                // clear the form
-                setEmptyFields([]);
-                setError(null);
-                console.log("Data updated successfully");
-
-                setTimeout(() => navigate('/'), 100); // tiny delay
-
-                navigate(-1);
-
-            }
-        } catch (error) {
-            console.log(error);
-            setError("Something went wrong. Please try again later.");
-        }
     }
-
-
 
 
     return (
