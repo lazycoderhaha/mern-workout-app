@@ -157,7 +157,7 @@ nav button {
   font-family: "Poppins";
   cursor: pointer;
   font-size: 1em;
-  margin: 0px 20px;
+  margin-left: 20px;
 }
 
 /* auth forms */

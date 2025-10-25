@@ -1,7 +1,11 @@
 import express from 'express';
 import { getWorkouts, getWorkout, createWorkout, deleteWorkout, updateWorkout } from '../controllers/workoutController.js';
+import { authMiddleware } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
+
+// require auth for all workout routes
+router.use(authMiddleware);
 
 // GET all workouts
 router.get('/', getWorkouts)

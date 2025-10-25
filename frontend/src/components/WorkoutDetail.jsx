@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUpdateWorkout } from '../hooks/useUpdateWorkout';
 import { useState } from 'react';
+import { useUserContext } from '../hooks/useUserContext';
 
 
 const WorkoutDetail = () => {
@@ -16,10 +17,15 @@ const WorkoutDetail = () => {
     const navigate = useNavigate();
 
     const { updateWorkoutRequest } = useUpdateWorkout();
+    const { user } = useUserContext();
 
     useEffect(() => {
         const fetchWorkout = async () => {
-            const response = await fetch('http://localhost:3000/api/workouts/' + id);
+            const response = await fetch('http://localhost:3000/api/workouts/' + id, {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`
+                }
+            });
             const json = await response.json();
             if (response.ok) {
                 console.log(json);

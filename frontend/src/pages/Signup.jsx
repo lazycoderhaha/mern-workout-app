@@ -1,13 +1,22 @@
 import React from 'react'
-import { useState } from 'react'
-import { useSignup } from '../hooks/useSignup';
+import { useState, useEffect } from 'react'
+import { useSignup } from '../hooks/useSignup.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../hooks/useUserContext.jsx';
 
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { signup, isLoading, error } = useSignup();
     const navigate = useNavigate();
+
+    const { user } = useUserContext();
+
+    useEffect(() => {
+        if (user) {
+            navigate('/');
+        }
+    }, [user, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

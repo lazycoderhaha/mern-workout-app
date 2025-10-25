@@ -1,15 +1,16 @@
-import { useState } from 'react';
-import { useWorkoutsContext } from './useWorkoutsContext';
-
+import { useUserContext } from "../hooks/useUserContext"
 
 export const useUpdateWorkout = () => {
+    const { user } = useUserContext();
+
     const updateWorkoutRequest = async (id, workout, setError, setEmptyFields) => {
         try {
             const response = await fetch('http://localhost:3000/api/workouts/' + id, {
                 method: 'PATCH',
                 body: JSON.stringify(workout),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 }
 
             })

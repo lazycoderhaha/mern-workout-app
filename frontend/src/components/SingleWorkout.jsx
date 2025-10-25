@@ -2,6 +2,7 @@ import moment from "moment";
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext.jsx";
 import WorkoutForm from "./WorkoutForm.jsx";
 import { Link, useNavigate } from "react-router-dom";
+import { useUserContext } from "../hooks/useUserContext.jsx";
 
 
 const SingleWorkout = ({ workout }) => {
@@ -9,9 +10,18 @@ const SingleWorkout = ({ workout }) => {
     const { dispatch } = useWorkoutsContext();
     const navigate = useNavigate();
 
+    const { user } = useUserContext();
+
     const handleDelete = async () => {
+        if (!user) {
+            console.log("You must be logged in to delete a workout");
+            return;
+        }
         const response = await fetch('http://127.0.0.1:3000/api/workouts/' + workout._id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${user.token}`
+            }
         })
         const json = await response.json()
         if (response.ok) {

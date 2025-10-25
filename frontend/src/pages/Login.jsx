@@ -2,7 +2,8 @@ import React from 'react'
 import { useState } from 'react'
 import { useLogin } from '../hooks/useLogin';
 import { useNavigate } from 'react-router-dom';
-
+import { useEffect } from 'react';
+import { useUserContext } from '../hooks/useUserContext.jsx';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +11,13 @@ const Login = () => {
 
     const { login, isLoading, error } = useLogin();
     const navigate = useNavigate();
+    const { user } = useUserContext();
+
+    useEffect(() => {
+        if (user) {
+            navigate('/');
+        }
+    }, [user, navigate]);
 
 
     const handleSubmit = async (e) => {

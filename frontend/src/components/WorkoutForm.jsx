@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useWorkoutsContext } from '../hooks/useWorkoutsContext.jsx';
+import { useUserContext } from '../hooks/useUserContext.jsx';
 
 const WorkoutForm = () => {
     const [title, setTitle] = useState('');
@@ -10,9 +11,16 @@ const WorkoutForm = () => {
 
     const { dispatch } = useWorkoutsContext();
 
+    const { user } = useUserContext();
+
 
     const workoutForm = async (e) => {
         e.preventDefault();
+        if (!user) {
+            setError("You must be logged in to add a workout");
+            return;
+        }
+
         const workout = { title, load, reps };
 
         try {
@@ -20,7 +28,8 @@ const WorkoutForm = () => {
                 method: 'POST',
                 body: JSON.stringify(workout),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.token}`
                 }
 
             })
