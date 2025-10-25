@@ -4,8 +4,8 @@ import { useUserContext } from '../hooks/useUserContext.jsx';
 
 const WorkoutForm = () => {
     const [title, setTitle] = useState('');
-    const [load, setLoad] = useState('');
-    const [reps, setReps] = useState('');
+    const [load, setLoad] = useState(0);
+    const [reps, setReps] = useState(0);
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
 
@@ -40,13 +40,16 @@ const WorkoutForm = () => {
             }
             if (response.ok) {
                 console.log('New Workout Added:', json);
-                dispatch({ type: 'ADD_WORKOUT', payload: json })
+
                 // clear the form
                 setTitle('');
-                setLoad('');
-                setReps('');
+                setLoad(0);
+                setReps(0);
                 setEmptyFields([]);
                 setError(null);
+
+                dispatch({ type: 'ADD_WORKOUT', payload: json })
+
             }
 
 
@@ -66,13 +69,13 @@ const WorkoutForm = () => {
             <form action="" method="post" onSubmit={workoutForm}>
                 <h3>Add a New Workout</h3>
                 <label htmlFor="title">Exercise Title:</label>
-                <input type="text" id="title" name="title" onChange={(e) => setTitle(e.target.value)} className={emptyFields.includes('title') ? 'error' : ''} />
+                <input type="text" id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} className={emptyFields.includes('title') ? 'error' : ''} />
 
                 <label htmlFor="load">Load (in kg):</label>
-                <input type="number" id="load" name="load" onChange={(e) => setLoad(e.target.value)} className={emptyFields.includes('load') ? 'error' : ''} />
+                <input type="number" id="load" name="load" value={load} onChange={(e) => setLoad(e.target.value)} className={emptyFields.includes('load') ? 'error' : ''} />
 
                 <label htmlFor="reps">Number of Reps:</label>
-                <input type="number" id="reps" name="reps" onChange={(e) => setReps(e.target.value)} className={emptyFields.includes('reps') ? 'error' : ''} />
+                <input type="number" id="reps" name="reps" value={reps} onChange={(e) => setReps(e.target.value)} className={emptyFields.includes('reps') ? 'error' : ''} />
 
                 <button type="submit">Add Workout</button>
             </form>
